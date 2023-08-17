@@ -69,36 +69,46 @@ class _HomePageState extends State<HomePage> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            selectedIcon: Icon(Icons.search),
+            icon: Icon(Icons.search),
+            label: 'Search',
           ),
           NavigationDestination(
-            icon: Icon(Icons.business),
-            label: 'Business',
+            selectedIcon: Icon(Icons.fitness_center),
+            icon: Icon(Icons.fitness_center_outlined),
+            label: 'Train',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.school),
-            icon: Icon(Icons.school_outlined),
-            label: 'School',
+            icon: Icon(Icons.favorite),
+            label: 'Programs',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),
       body: <Widget>[
         Container(
-          color: Colors.red,
+          color: Colors.blue,
           alignment: Alignment.center,
-          child: const Text('Page 1'),
-        ),
-        Container(
-          color: Colors.green,
-          alignment: Alignment.center,
-          child: const Text('Page 2'),
+          child: const Text('Find new program'),
         ),
         Container(
           color: Colors.blue,
           alignment: Alignment.center,
-          child: const Text('Page 3'),
+          child: const Text('Train'),
+        ),
+        Container(
+          color: Colors.blue,
+          alignment: Alignment.center,
+          child: const Text('Programs'),
+        ),
+        Container(
+          color: Colors.blue,
+          alignment: Alignment.center,
+          child: const Text('Settings'),
         ),
       ][currentPageIndex],
     );

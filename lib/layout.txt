@@ -1,0 +1,15 @@
+HomePage
+* Home
+* Programs
+    * create new program
+    * previously created programs 
+* Train
+    * loads current program
+* Settings
+    * Personal info aka names, email, etc.
+
+-------------
+* needs login page
+* backend db to track programs
+* plate calculator
+    * boolean for symmetry
