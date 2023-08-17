@@ -1,6 +1,6 @@
 # lifter
 
-A new Flutter project.
+A powerlifting and strength training programming app written in Dart
 
 ## Getting Started
 
