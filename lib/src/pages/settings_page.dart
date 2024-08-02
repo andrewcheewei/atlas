@@ -7,6 +7,12 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPage();
 }
 
+// email (dialog box to change?)
+// change password
+// toggle dark mode
+// delete account
+// log out
+
 class _SettingsPage extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {

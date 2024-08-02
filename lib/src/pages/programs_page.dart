@@ -11,7 +11,12 @@ class _ProgramsPage extends State<ProgramsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Programs')),
-        body: Center(child: Text('Programs')));
+      appBar: AppBar(title: const Text('Programs')),
+      body: Center(child: Text('Programs')),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => {},
+      ),
+    );
   }
 }
