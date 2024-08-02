@@ -23,7 +23,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'atlas',
-      theme: ThemeData.light().copyWith(
+      theme: ThemeData(
+        textTheme: Theme.of(context).textTheme.apply(
+              fontSizeFactor: 1.1,
+              fontSizeDelta: 2,
+            ),
         primaryColor: Colors.blue,
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(

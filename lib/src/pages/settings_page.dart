@@ -18,39 +18,33 @@ class _SettingsPage extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('First Route'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        title: const Text('Settings'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text('Open route'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SecondRoute()),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Second Route'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Go back!'),
-        ),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text('Email')),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text('Password')),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text('Dark Mode')),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text('Delete account')),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text('Log out')),
+          ),
+        ],
       ),
     );
   }
