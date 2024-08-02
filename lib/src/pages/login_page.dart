@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:atlas/main.dart';
-import 'package:atlas/src/pages/signup.dart';
+import 'package:atlas/src/pages/signup_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
       final session = event.session;
       if (session != null) {
-        Navigator.of(context).pushReplacementNamed('/');
+        Navigator.of(context).pushReplacementNamed('/main');
       }
     });
   }
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SignUp()));
+                                        builder: (context) => SignUpPage()));
                               })
                       ]),
                     ),

@@ -1,14 +1,14 @@
 import 'package:atlas/main.dart';
 import 'package:flutter/material.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _SignUpState();
+  State<StatefulWidget> createState() => _SignUpPageState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 

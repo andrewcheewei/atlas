@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:atlas/src/pages/login_page.dart';
-import 'package:atlas/src/pages/home_page.dart';
+import 'package:atlas/src/pages/main_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home:
-          supabase.auth.currentSession == null ? const LoginPage() : HomePage(),
+          supabase.auth.currentSession == null ? const LoginPage() : MainPage(),
     );
   }
 }
