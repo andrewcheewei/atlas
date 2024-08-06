@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({Key? key}) : super(key: key);
@@ -36,6 +37,37 @@ class NewProgram extends StatefulWidget {
 }
 
 class _NewProgramState extends State<NewProgram> {
+  final _formKey = GlobalKey<Formstate>();
+  late TextEditingController _exerciseController;
+  late TextEditingController _setsController;
+  late TextEditingController _repsController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _exerciseController = TextEditingController();
+    _setsController = TextEditingController();
+    _repsController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _exerciseController.dispose();
+    _setsController.dispose();
+    _repsController.dispose();
+
+    super.dispose;
+  }
+
+  Map<String, String> _exerciseData() {
+    return {
+      'exercise': _exerciseController.text,
+      'sets': _setsController.text,
+      'reps': _repsController.text,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,27 +83,69 @@ class _NewProgramState extends State<NewProgram> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: const Text('Add Exercise'),
+                      key: _formKey,
                       content: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextField(
+                          TextFormField(
                             autofocus: true,
                             decoration: InputDecoration(hintText: 'Exercise'),
+                            controller: _exerciseController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Exercise cannot be empty';
+                              }
+                              return null;
+                            },
                           ),
-                          TextField(
+                          TextFormField(
                             autofocus: true,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(hintText: 'Sets'),
+                            controller: _setsController,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  int.parse(value) < 1) {
+                                return 'Sets cannot be less than 1';
+                              }
+                              return null;
+                            },
                           ),
-                          TextField(
+                          TextFormField(
                             autofocus: true,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(hintText: 'Reps'),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: _repsController,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  int.parse(value) < 1) {
+                                return 'Reps cannot be less than 1';
+                              }
+                              return null;
+                            },
                           ),
                         ],
                       ),
                       actions: [
-                        TextButton(onPressed: () {}, child: Text('Submit'))
+                        TextButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                Map<String, String> formData =
+                                    _collectFormData();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('Form Data: $formData')),
+                                );
+                              }
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Submit'))
                       ],
                     );
                   },
