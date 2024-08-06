@@ -29,11 +29,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'atlas',
       theme: ThemeData(
-        textTheme: Theme.of(context).textTheme.apply(
-              fontSizeFactor: 1.1,
-              fontSizeDelta: 2,
-            ),
+        textTheme: Theme.of(context).textTheme,
         primaryColor: Colors.blue,
+        appBarTheme:
+            AppBarTheme(color: Colors.blue, foregroundColor: Colors.white),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             foregroundColor: Colors.blue,
