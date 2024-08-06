@@ -17,13 +17,14 @@ class _ProgramsPage extends State<ProgramsPage> {
       appBar: AppBar(title: const Text('Programs')),
       body: Center(child: Text('Programs')),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        tooltip: 'Create new program',
         onPressed: () => {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const NewProgram()),
           )
         },
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -37,30 +38,12 @@ class NewProgram extends StatefulWidget {
 }
 
 class _NewProgramState extends State<NewProgram> {
-  final _formKey = GlobalKey<Formstate>();
-  late TextEditingController _exerciseController;
-  late TextEditingController _setsController;
-  late TextEditingController _repsController;
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _exerciseController = TextEditingController();
+  late TextEditingController _setsController = TextEditingController();
+  late TextEditingController _repsController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-
-    _exerciseController = TextEditingController();
-    _setsController = TextEditingController();
-    _repsController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _exerciseController.dispose();
-    _setsController.dispose();
-    _repsController.dispose();
-
-    super.dispose;
-  }
-
-  Map<String, String> _exerciseData() {
+  Map<String, String> _collectFormData() {
     return {
       'exercise': _exerciseController.text,
       'sets': _setsController.text,
@@ -69,92 +52,82 @@ class _NewProgramState extends State<NewProgram> {
   }
 
   @override
+  void dispose() {
+    _exerciseController.dispose();
+    _setsController.dispose();
+    _repsController.dispose();
+    super.dispose;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create New Program'),
+        title: Text('Create New Program'),
       ),
-      body: ListView(children: <Widget>[
-        Card(
-          child: GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Add Exercise'),
-                      key: _formKey,
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                            autofocus: true,
-                            decoration: InputDecoration(hintText: 'Exercise'),
-                            controller: _exerciseController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Exercise cannot be empty';
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            autofocus: true,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(hintText: 'Sets'),
-                            controller: _setsController,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  int.parse(value) < 1) {
-                                return 'Sets cannot be less than 1';
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            autofocus: true,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(hintText: 'Reps'),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: _repsController,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  int.parse(value) < 1) {
-                                return 'Reps cannot be less than 1';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                Map<String, String> formData =
-                                    _collectFormData();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('Form Data: $formData')),
-                                );
-                              }
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Submit'))
-                      ],
-                    );
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  autofocus: true,
+                  decoration: InputDecoration(hintText: 'Exercise'),
+                  controller: _exerciseController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Exercise cannot be empty';
+                    }
+                    return null;
                   },
-                );
-              },
-              child: ListTile(
-                  leading: Icon(Icons.add), title: Text('Add Exercise'))),
-        )
-      ]),
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(hintText: 'Sets'),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  controller: _setsController,
+                  validator: (value) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        int.parse(value) < 1) {
+                      return 'Sets cannot be less than 1';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(hintText: 'Reps'),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  controller: _repsController,
+                  validator: (value) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        int.parse(value) < 1) {
+                      return 'Reps cannot be less than 1';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Map<String, String> formData = _collectFormData();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('$formData')),
+                      );
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: const Text('Submit'),
+                )
+              ],
+            )),
+      ),
     );
   }
 }
