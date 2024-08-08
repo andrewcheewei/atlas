@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:atlas/src/pages/home_page.dart';
-import 'package:atlas/src/pages/train_page.dart';
-import 'package:atlas/src/pages/programs_page.dart';
-import 'package:atlas/src/pages/settings_page.dart';
+import './home_page.dart';
+import './train_page.dart';
+import './programs_page.dart';
+import './settings_page.dart';
 
 class MainPage extends StatefulWidget {
   @override

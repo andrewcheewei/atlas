@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:atlas/main.dart';
-import 'package:atlas/src/pages/signup_page.dart';
+import '../../main.dart';
+import './signup_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

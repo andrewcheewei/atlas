@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../main.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({Key? key}) : super(key: key);
@@ -9,46 +10,113 @@ class ProgramsPage extends StatefulWidget {
 }
 
 // TODO: add text if no programs currently available
-
+// TODO: maybe store as list of maps?
+// TODO: create program should take in a name of program, then allow for adding exercises
 class _ProgramsPage extends State<ProgramsPage> {
+  createProgram(BuildContext context) {
+    final TextEditingController _programNameController =
+        TextEditingController();
+
+    Future<void> _addProgram(String name) async {
+      final response = await supabase.from('programs').insert({'name': name});
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Program created: $name'),
+        ));
+        if (response != null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Failed to add program: ${response.error!.message}'),
+          ));
+        }
+      }
+    }
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Enter Program Name'),
+            content: TextFormField(
+              controller: _programNameController,
+              decoration: InputDecoration(hintText: 'Program name'),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  String name = _programNameController.text;
+                  if (name.isNotEmpty) {
+                    _addProgram(name);
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: Text('Submit'),
+              )
+            ],
+          );
+        });
+  }
+
+  Widget buildCard() => Card(
+          child: ListTile(
+        leading: Icon(Icons.fitness_center_rounded),
+        title: Text('Sample Program'),
+      ));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Programs')),
-      body: Center(child: Text('Programs')),
+      // show Programs if no programs
+      // retrieve existing programs from db
+//      body: Center(child: Text('No existing programs')),
+      body: ListView(
+        children: <Widget>[
+          buildCard(),
+          buildCard(),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Create new program',
-        onPressed: () => {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NewProgram()),
-          )
-        },
+        onPressed: () => {createProgram(context)},
         child: Icon(Icons.add),
       ),
     );
   }
 }
 
-class NewProgram extends StatefulWidget {
-  const NewProgram({super.key});
+// TODO: rename class name to new exercise or something
+class NewExercise extends StatefulWidget {
+  const NewExercise({super.key});
 
   @override
-  State<NewProgram> createState() => _NewProgramState();
+  State<NewExercise> createState() => _NewExerciseState();
 }
 
-class _NewProgramState extends State<NewProgram> {
+class _NewExerciseState extends State<NewExercise> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _exerciseController = TextEditingController();
+  late TextEditingController _exerciseController;
   late TextEditingController _setsController = TextEditingController();
   late TextEditingController _repsController = TextEditingController();
 
-  Map<String, String> _collectFormData() {
+  Map<String, String> _getExerciseData() {
     return {
       'exercise': _exerciseController.text,
       'sets': _setsController.text,
       'reps': _repsController.text,
     };
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _exerciseController = TextEditingController();
   }
 
   @override
@@ -63,71 +131,70 @@ class _NewProgramState extends State<NewProgram> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create New Program'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  autofocus: true,
-                  decoration: InputDecoration(hintText: 'Exercise'),
-                  controller: _exerciseController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Exercise cannot be empty';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(hintText: 'Sets'),
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  controller: _setsController,
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        int.parse(value) < 1) {
-                      return 'Sets cannot be less than 1';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(hintText: 'Reps'),
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  controller: _repsController,
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        int.parse(value) < 1) {
-                      return 'Reps cannot be less than 1';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Map<String, String> formData = _collectFormData();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('$formData')),
-                      );
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: const Text('Submit'),
-                )
-              ],
-            )),
+        title: Text('Create New Exercise'),
       ),
     );
   }
+
+  addExercise() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Add Exercise'),
+          content: Column(
+            children: [
+              TextFormField(
+                autofocus: true,
+                decoration: InputDecoration(hintText: 'Exercise'),
+                controller: _exerciseController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Exercise cannot be empty';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(hintText: 'Sets'),
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                controller: _exerciseController,
+                validator: (value) {
+                  if (value == null || value.isEmpty || int.parse(value) < 1) {
+                    return 'Sets cannot be less than 1';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(hintText: 'Reps'),
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                controller: _exerciseController,
+                validator: (value) {
+                  if (value == null || value.isEmpty || int.parse(value) < 1) {
+                    return 'Reps cannot be less than 1';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+          actions: [
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Map<String, String> formData = _getExerciseData();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('$formData')),
+                    );
+                  }
+                  Navigator.of(context).pop(_exerciseController.text);
+                },
+                child: Text('Submit'))
+          ],
+        ),
+      );
 }

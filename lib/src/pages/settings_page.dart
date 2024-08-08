@@ -1,4 +1,3 @@
-import 'package:atlas/main.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
