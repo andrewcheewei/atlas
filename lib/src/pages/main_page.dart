@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './home_page.dart';
+import './calculator_page.dart';
 import './train_page.dart';
 import './programs_page.dart';
 import './settings_page.dart';
@@ -13,6 +14,7 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
@@ -32,9 +34,10 @@ class _MainPageState extends State<MainPage> {
         body: Stack(
           children: [
             _buildOffstageNavigator(0, HomePage()),
-            _buildOffstageNavigator(1, TrainPage()),
-            _buildOffstageNavigator(2, ProgramsPage()),
-            _buildOffstageNavigator(3, SettingsPage()),
+            _buildOffstageNavigator(1, PlateCalculator()),
+            _buildOffstageNavigator(2, TrainPage()),
+            _buildOffstageNavigator(3, ProgramsPage()),
+            _buildOffstageNavigator(4, SettingsPage()),
           ],
         ),
         bottomNavigationBar: NavigationBar(
@@ -45,6 +48,11 @@ class _MainPageState extends State<MainPage> {
             NavigationDestination(
               icon: Icon(Icons.home),
               label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.insert_chart),
+              //icon: Icon(Icons.circle_rounded),
+              label: 'Calculator',
             ),
             NavigationDestination(
               icon: Icon(Icons.fitness_center),
